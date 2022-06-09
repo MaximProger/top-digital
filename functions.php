@@ -1,4 +1,19 @@
 <?php
+
+if (!function_exists('top_digital_setup')) {
+    function top_digital_setup() {
+        add_theme_support('custom-logo', [
+            'height'      => 50,
+            'width'       => 130,
+            'flex-width'  => false,
+            'flex-height' => false,
+            'header-text' => '',
+            'unlink-homepage-logo' => false, // WP 5.5
+        ]);
+    }
+    add_action('after_setup_theme', 'top_digital_setup');
+}
+
 // правильный способ подключить стили и скрипты
 add_action( 'wp_enqueue_scripts', 'top_digital_scripts' );
 
