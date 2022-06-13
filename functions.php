@@ -12,7 +12,7 @@ if (!function_exists('top_digital_setup')) {
         ]);
         add_theme_support('title-tag');
         add_theme_support( 'post-thumbnails' );
-        set_post_thumbnail_size( 730, 480 );
+        set_post_thumbnail_size( 730, 480, true );
     }
     add_action('after_setup_theme', 'top_digital_setup');
 }
@@ -118,3 +118,31 @@ function delete_intermediate_image_sizes( $sizes ){
         '2048x2048',
     ] );
 }
+
+// удаляет H2 из шаблона пагинации
+add_filter('navigation_markup_template', 'my_navigation_template', 10, 2 );
+function my_navigation_template( $template, $class ){
+    return '
+	<nav class="navigation %1$s" role="navigation">
+		<div class="nav-links">%3$s</div>
+	</nav>
+	';
+}
+
+// выводим пагинацию
+the_posts_pagination( array(
+    'end_size' => 2,
+) );
+
+function top_digital_widgets_init() {
+    register_sidebar(array(
+        'name'          => esc_html('Сайдабр блога', 'top_digital'),
+        'id'            => "sidebar-blog",
+        'before_widget' => '<div id="%1$s" class="col-lg-12 %2$s"><div class="sidebar-widget">',
+        'after_widget'  => "</div></div>\n",
+        'before_title'  => '<h5 class="mb-3">',
+        'after_title'   => "</h5>\n",
+    ));
+}
+
+add_action('widgets_init', 'top_digital_widgets_init');

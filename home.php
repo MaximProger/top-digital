@@ -90,17 +90,20 @@ get_header(); ?>
                 endwhile; else: ?>
                     Записей нет.
                 <?php endif; ?>
+                    <div class="col-lg-12">
+                        <?php the_posts_pagination(); ?>
+                    </div>
                 </div>
-
             </div>
             <div class="col-lg-4">
                 <div class="row">
+                    <?php if ( ! dynamic_sidebar('sidebar-blog') ) {
+                        dynamic_sidebar( 'sidebar-blog' );
+                    }
+                    ?>
                     <div class="col-lg-12">
                         <div class="sidebar-widget search">
-                            <div class="form-group">
-                                <input type="text" placeholder="поиск" class="form-control">
-                                <i class="fa fa-search"></i>
-                            </div>
+                            <?php get_search_form(); ?>
                         </div>
                     </div>
 
