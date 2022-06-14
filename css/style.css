@@ -1254,6 +1254,7 @@ BLOG PAGE
   padding-left: 20px;
 }
 
+.category li,
 .category ul li {
   margin-bottom: 10px;
   text-transform: capitalize;
@@ -1263,6 +1264,7 @@ BLOG PAGE
   padding-bottom: 10px;
 }
 
+.category li:before,
 .category ul li:before {
   position: absolute;
   content: "\f105";
@@ -1273,12 +1275,16 @@ BLOG PAGE
   font-weight: 900;
 }
 
+.category li a {
+  color: #788487;
+}
+
 .tag a {
   text-transform: capitalize;
   padding: 5px 8px;
   border: 1px solid #eee;
   margin-bottom: 5px;
-  font-size: 14px;
+  font-size: 14px !important;
   display: inline-block;
 }
 
@@ -1291,6 +1297,7 @@ BLOG PAGE
   color: #635CDB;
 }
 
+.download-list a,
 .download a {
   display: block;
   padding: 12px 20px;
@@ -1299,6 +1306,7 @@ BLOG PAGE
   background: #f2f2f2;
 }
 
+.download-list a i,
 .download a i {
   margin-right: 15px;
   color: #635CDB;

@@ -138,11 +138,135 @@ function top_digital_widgets_init() {
     register_sidebar(array(
         'name'          => esc_html('Сайдабр блога', 'top_digital'),
         'id'            => "sidebar-blog",
-        'before_widget' => '<div id="%1$s" class="col-lg-12 %2$s"><div class="sidebar-widget">',
-        'after_widget'  => "</div></div>\n",
+        'before_widget' => '<div class="col-lg-12"><div class="sidebar-widget  %2$s">',
+        'after_widget'  => "</div></div>",
         'before_title'  => '<h5 class="mb-3">',
-        'after_title'   => "</h5>\n",
+        'after_title'   => "</h5>",
+        'before_sidebar' => '', // WP 5.6
+        'after_sidebar'  => '', // WP 5.6
     ));
 }
 
 add_action('widgets_init', 'top_digital_widgets_init');
+
+/**
+ * Добавление нового виджета File_Widget.
+ */
+class File_Widget extends WP_Widget {
+
+    // Регистрация виджета используя основной класс
+    function __construct() {
+        // вызов конструктора выглядит так:
+        // __construct( $id_base, $name, $widget_options = array(), $control_options = array() )
+        parent::__construct(
+            'file_widget', // ID виджета, если не указать (оставить ''), то ID будет равен названию класса в нижнем регистре: file_widget
+            'Полезные файлы',
+            array( 'description' => 'Описание виджета', /*'classname' => 'my_widget',*/ )
+        );
+
+        // скрипты/стили виджета, только если он активен
+        if ( is_active_widget( false, false, $this->id_base ) || is_customize_preview() ) {
+            add_action('wp_enqueue_scripts', array( $this, 'add_my_widget_scripts' ));
+            add_action('wp_head', array( $this, 'add_my_widget_style' ) );
+        }
+    }
+
+    /**
+     * Вывод виджета во Фронт-энде
+     *
+     * @param array $args     аргументы виджета.
+     * @param array $instance сохраненные данные из настроек
+     */
+    function widget( $args, $instance ) {
+        $title = apply_filters( 'widget_title', $instance['title'] );
+        $file_name_1 = @ $instance['file_name_1'];
+        $file_link_1 = @ $instance['file_link_1'];
+        $file_name_2 = @ $instance['file_name_2'];
+        $file_link_2 = @ $instance['file_link_2'];
+
+        echo $args['before_widget'];
+        if ( ! empty( $title ) ) {
+            echo $args['before_title'] . $title . $args['after_title'];
+        }
+        echo '<div class="download-list">';
+        echo '<a href="'.$file_link_1.'"> <i class="fa fa-file-pdf"></i>'.$file_name_1.'</a>';
+        echo '<a href="'.$file_link_2.'"> <i class="fa fa-file-pdf"></i>'.$file_name_2.'</a>';
+        echo '</div>';
+        echo $args['after_widget'];
+    }
+
+    /**
+     * Админ-часть виджета
+     *
+     * @param array $instance сохраненные данные из настроек
+     */
+    function form( $instance ) {
+        $title = @ $instance['title'] ?: 'Полезные файлы';
+        $file_name_1 = @ $instance['file_name_1'] ?: 'Название файла';
+        $file_link_1 = @ $instance['file_link_1'] ?: 'URL файл';
+        $file_name_2 = @ $instance['file_name_2'] ?: 'Название файла';
+        $file_link_2 = @ $instance['file_link_2'] ?: 'URL файл';
+
+        ?>
+        <p>
+            <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label>
+            <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>">
+        </p>
+        <p>
+            <label for="<?php echo $this->get_field_id( 'file_name_1' ); ?>"><?php _e( 'Название файла 1:' ); ?></label>
+            <input class="widefat" id="<?php echo $this->get_field_id( 'file_name_1' ); ?>" name="<?php echo $this->get_field_name( 'file_name_1' ); ?>" type="text" value="<?php echo esc_attr( $file_name_1 ); ?>">
+        </p>
+        <p>
+            <label for="<?php echo $this->get_field_id( 'file_link_1' ); ?>"><?php _e( 'Ссылка на файл 1:' ); ?></label>
+            <input class="widefat" id="<?php echo $this->get_field_id( 'file_link_1' ); ?>" name="<?php echo $this->get_field_name( 'file_link_1' ); ?>" type="text" value="<?php echo esc_attr( $file_link_1 ); ?>">
+        </p>
+        <p>
+            <label for="<?php echo $this->get_field_id( 'file_name_2' ); ?>"><?php _e( 'Название файла 2:' ); ?></label>
+            <input class="widefat" id="<?php echo $this->get_field_id( 'file_name_2' ); ?>" name="<?php echo $this->get_field_name( 'file_name_2' ); ?>" type="text" value="<?php echo esc_attr( $file_name_2 ); ?>">
+        </p>
+        <p>
+            <label for="<?php echo $this->get_field_id( 'file_link_2' ); ?>"><?php _e( 'Ссылка на файл 2:' ); ?></label>
+            <input class="widefat" id="<?php echo $this->get_field_id( 'file_link_2' ); ?>" name="<?php echo $this->get_field_name( 'file_link_2' ); ?>" type="text" value="<?php echo esc_attr( $file_link_2 ); ?>">
+        </p>
+        <?php
+    }
+
+    /**
+     * Сохранение настроек виджета. Здесь данные должны быть очищены и возвращены для сохранения их в базу данных.
+     *
+     * @see WP_Widget::update()
+     *
+     * @param array $new_instance новые настройки
+     * @param array $old_instance предыдущие настройки
+     *
+     * @return array данные которые будут сохранены
+     */
+    function update( $new_instance, $old_instance ) {
+        $instance = array();
+        $instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
+        $instance['file_name_1'] = ( ! empty( $new_instance['file_name_1'] ) ) ? strip_tags( $new_instance['file_name_1'] ) : '';
+        $instance['file_link_1'] = ( ! empty( $new_instance['file_link_1'] ) ) ? strip_tags( $new_instance['file_link_1'] ) : '';
+        $instance['file_name_2'] = ( ! empty( $new_instance['file_name_2'] ) ) ? strip_tags( $new_instance['file_name_2'] ) : '';
+        $instance['file_link_2'] = ( ! empty( $new_instance['file_link_2'] ) ) ? strip_tags( $new_instance['file_link_2'] ) : '';
+
+        return $instance;
+    }
+
+    // скрипт виджета
+    function add_my_widget_scripts() {
+        // фильтр чтобы можно было отключить скрипты
+        if( ! apply_filters( 'show_my_widget_script', true, $this->id_base ) )
+            return;
+
+        $theme_url = get_stylesheet_directory_uri();
+
+        wp_enqueue_script('my_widget_script', $theme_url .'/my_widget_script.js' );
+    }
+}
+// конец класса File_Widget
+
+// регистрация File_Widget в WordPress
+function register_file_widget() {
+    register_widget( 'File_Widget' );
+}
+add_action( 'widgets_init', 'register_file_widget' );
