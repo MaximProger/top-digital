@@ -41,11 +41,12 @@ function top_digital_scripts() {
     wp_enqueue_script( 'custom', get_template_directory_uri() . '/js/custom.js', array('google-map'), null,true);
 }
 
+// инициализация меню
 function top_digital_menus() {
-
     $locations = array(
         'header'  => __( 'Header Menu', 'top_digital' ),
-        'footer'   => __( 'Footer Menu', 'top_digital' ),
+        'footer-left'   => __( 'Footer Left Menu', 'top_digital' ),
+        'footer-right'   => __( 'Footer Right Menu', 'top_digital' ),
     );
 
     register_nav_menus( $locations );
@@ -53,59 +54,23 @@ function top_digital_menus() {
 
 add_action('init', 'top_digital_menus');
 
-class bootstrap_4_walker_nav_menu extends Walker_Nav_menu {
-
-    function start_lvl( &$output, $depth = 0, $args = array() ){ // ul
-        $indent = str_repeat("\t",$depth); // indents the outputted HTML
-        $submenu = ($depth > 0) ? ' sub-menu' : '';
-        $output .= "\n$indent<ul class=\"dropdown-menu$submenu depth_$depth\">\n";
+// добавляем класс для li
+function add_additional_class_on_li($classes, $item, $args) {
+    if(isset($args->li_class)) {
+        $classes[] = $args->li_class;
     }
-
-    function start_el( &$output, $item, $depth = 0, $args = array(), $id = 0 ){ // li a span
-
-        $indent = ( $depth ) ? str_repeat("\t",$depth) : '';
-
-        $li_attributes = '';
-        $class_names = $value = '';
-
-        $classes = empty( $item->classes ) ? array() : (array) $item->classes;
-
-        $classes[] = ($args->walker->has_children) ? 'dropdown' : '';
-        $classes[] = ($item->current || $item->current_item_anchestor) ? 'active' : '';
-        $classes[] = 'nav-item';
-        $classes[] = 'nav-item-' . $item->ID;
-        if( $depth && $args->walker->has_children ){
-            $classes[] = 'dropdown-menu';
-        }
-
-        $class_names =  join(' ', apply_filters('nav_menu_css_class', array_filter( $classes ), $item, $args ) );
-        $class_names = ' class="' . esc_attr($class_names) . '"';
-
-        $id = apply_filters('nav_menu_item_id', 'menu-item-'.$item->ID, $item, $args);
-        $id = strlen( $id ) ? ' id="' . esc_attr( $id ) . '"' : '';
-
-        $output .= $indent . '<li ' . $id . $value . $class_names . $li_attributes . '>';
-
-        $attributes = ! empty( $item->attr_title ) ? ' title="' . esc_attr($item->attr_title) . '"' : '';
-        $attributes .= ! empty( $item->target ) ? ' target="' . esc_attr($item->target) . '"' : '';
-        $attributes .= ! empty( $item->xfn ) ? ' rel="' . esc_attr($item->xfn) . '"' : '';
-        $attributes .= ! empty( $item->url ) ? ' href="' . esc_attr($item->url) . '"' : '';
-
-        $attributes .= ( $args->walker->has_children ) ? ' class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"' : ' class="nav-link"';
-
-        $item_output = $args->before;
-        $item_output .= ( $depth > 0 ) ? '<a class="dropdown-item"' . $attributes . '>' : '<a' . $attributes . '>';
-        $item_output .= $args->link_before . apply_filters( 'the_title', $item->title, $item->ID ) . $args->link_after;
-        $item_output .= '</a>';
-        $item_output .= $args->after;
-
-        $output .= apply_filters ( 'walker_nav_menu_start_el', $item_output, $item, $depth, $args );
-
-    }
-
+    return $classes;
 }
+add_filter('nav_menu_css_class', 'add_additional_class_on_li', 1, 3);
 
-register_nav_menu('navbar', __('Navbar', 'Основное меню'));
+// добавляем класс для ссылок
+function add_menu_link_class( $atts, $item, $args ) {
+    if (property_exists($args, 'link_class')) {
+        $atts['class'] = $args->link_class;
+    }
+    return $atts;
+}
+add_filter( 'nav_menu_link_attributes', 'add_menu_link_class', 1, 3 );
 
 ## отключаем создание миниатюр файлов для указанных размеров
 add_filter( 'intermediate_image_sizes', 'delete_intermediate_image_sizes' );
@@ -134,6 +99,7 @@ the_posts_pagination( array(
     'end_size' => 2,
 ) );
 
+// регистрируем виджеты
 function top_digital_widgets_init() {
     register_sidebar(array(
         'name'          => esc_html('Сайдабр блога', 'top_digital'),
@@ -144,6 +110,24 @@ function top_digital_widgets_init() {
         'after_title'   => "</h5>",
         'before_sidebar' => '', // WP 5.6
         'after_sidebar'  => '', // WP 5.6
+    ));
+
+    register_sidebar(array(
+        'name'          => esc_html('Текст в подвале', 'top_digital'),
+        'id'            => "sidebar-footer-text",
+        'before_widget' => '<div class="footer-widget footer-link">',
+        'after_widget'  => "</div>",
+        'before_title'  => '<h4>',
+        'after_title'   => "</h4>",
+    ));
+
+    register_sidebar(array(
+        'name'          => esc_html('Контакты в подвале', 'top_digital'),
+        'id'            => "sidebar-footer-contacts",
+        'before_widget' => '<div class="footer-widget footer-text">',
+        'after_widget'  => "</div>",
+        'before_title'  => '<h4>',
+        'after_title'   => "</h4>",
     ));
 }
 
@@ -262,6 +246,16 @@ class File_Widget extends WP_Widget {
 
         wp_enqueue_script('my_widget_script', $theme_url .'/my_widget_script.js' );
     }
+
+    // стили виджета
+    function add_my_widget_style() {
+        // фильтр чтобы можно было отключить стили
+        if( ! apply_filters( 'show_my_widget_style', true, $this->id_base ) )
+            return;
+        ?>
+        <?php
+    }
+
 }
 // конец класса File_Widget
 

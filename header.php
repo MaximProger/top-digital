@@ -34,16 +34,16 @@
         </button>
 
         <div class="collapse navbar-collapse justify-content-end" id="mainNav">
-            <? wp_nav_menu( [
+            <? wp_nav_menu( array(
                 'theme_location'  => 'header',
-                'container'       => false,
-                'menu_class'      => 'navbar-nav',
-                'menu_id'         => false,
-                'echo'            => true,
+                'container' => false,
+                'menu' => 'header-menu',
+                'menu_class' => 'navbar-nav',
                 'items_wrap'      => '<ul id="%1$s" class="%2$s">%3$s</ul>',
+                'li_class'  => 'nav-item',
+                'link_class'   => 'nav-link',
                 'depth' => 2,
-                'walker' => new bootstrap_4_walker_nav_menu()
-            ] );
+            ) );
             ?>
         </div>
     </div>
