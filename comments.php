@@ -65,34 +65,50 @@ if ( post_password_required() ) {
 
     endif; // Check for have_comments().
 
-    comment_form();
+    $defaults = [
+        'fields'               => [
+            'author' => '
+        <div class="col-lg-6">
+            <div class="form-group mb-3">
+			    <input id="author" name="author" type="text" size="30" class="form-control" placeholder="Имя" />
+            </div>
+        </div>',
+            'email'  => '       
+       <div class="col-lg-6">
+            <div class="form-group mb-4">
+			    <input id="email" name="email"  size="30" aria-describedby="email-notes" type="email" class="form-control" placeholder="Email" />
+            </div>
+        </div>',
+            'cookies' => ''
+        ],
+        'comment_field'        => '
+        <div class="col-lg-12">
+            <div class="form-group mb-3">
+		    <textarea id="comment" name="comment" cols="30" rows="6" class="form-control"  placeholder="Комментарий"  aria-required="true" required="required"></textarea>
+            </div>
+        </div>',
+        'comment_notes_before' => '',
+        'comment_notes_after'  => '',
+        'id_form'              => 'commentform',
+        'id_submit'            => 'submit',
+        'class_container'      => 'mt-5 mb-3',
+        'class_form'           => 'row',
+        'class_submit'         => 'submit',
+        'name_submit'          => 'submit',
+        'title_reply'          => __( 'Leave a Reply' ),
+        'title_reply_to'       => __( 'Leave a Reply to %s' ),
+        'title_reply_before'   => '<h3 id="reply-title" class="mt-5 mb-2">',
+        'title_reply_after'    => '</h3><p class="mb-4">Ваш E-mail защищен от спама</p>',
+        'cancel_reply_before'  => ' <small>',
+        'cancel_reply_after'   => '</small>',
+        'cancel_reply_link'    => __( 'Cancel reply' ),
+        'label_submit'         => __( 'Post Comment' ),
+        'submit_button'        => '<div class="col-lg-12"><button type="submit" id="%2$s" class="btn btn-hero btn-circled">%4$s</button></div>',
+        'submit_field'         => '%1$s %2$s',
+        'format'               => 'xhtml',
+    ];
+
+    comment_form( $defaults );
     ?>
 
 </div><!-- #comments -->
-
-<div class="mt-5 mb-3">
-    <h3 class="mt-5 mb-2">Оставьте комментарий</h3>
-    <p class="mb-4">Ваш E-mail защищен от спама</p>
-    <form action="#" class="row">
-        <div class="col-lg-12">
-            <div class="form-group mb-3">
-                <textarea cols="30" rows="6" class="form-control"  placeholder="Комментарий"></textarea>
-            </div>
-        </div>
-        <div class="col-lg-6">
-            <div class="form-group mb-3">
-                <input type="text" class="form-control" placeholder="Имя">
-            </div>
-        </div>
-
-        <div class="col-lg-6">
-            <div class="form-group mb-4">
-                <input type="email" class="form-control" placeholder="Email">
-            </div>
-        </div>
-
-        <div class="col-lg-12">
-            <a href="#" class="btn btn-hero btn-circled">Оставить комментарий</a>
-        </div>
-    </form>
-</div>
