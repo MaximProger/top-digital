@@ -719,3 +719,37 @@ class Bootstrap_Walker_Comment extends Walker {
         <?php
     }
 }
+
+// Добавление типа записей "услуги"
+add_action('init', 'service_init');
+function service_init(){
+    register_post_type('service', array(
+        'labels'             => array(
+            'name'               => __('Услуги'), // основное название для типа записи
+            'singular_name'      => __('Услуга'), // название для одной записи этого типа
+            'add_new'            => __('Добавить услугу'), // для добавления новой записи
+            'add_new_item'       => __('Добавление услуги'), // заголовка у вновь создаваемой записи в админ-панели.
+            'edit_item'          => __('Редактирование услуги'), // для редактирования типа записи
+            'new_item'           => __('Новая услуга'), // текст новой записи
+            'view_item'          => __('Смотреть услугу'), // для просмотра записи этого типа.
+            'search_items'       => __('Искать услугу'), // для поиска по этим типам записи
+            'not_found'          => __('Не найдено'), // если в результате поиска ничего не было найдено
+            'not_found_in_trash' => __('Не найдено в корзине'), // если не было найдено в корзине
+            'parent_item_colon'  => '', // для родителей (у древовидных типов)
+            'menu_name'          => __('Услуги'), // название меню
+
+        ),
+        'menu_icon' => 'dashicons-universal-access-alt',
+        'public'             => true,
+        'publicly_queryable' => true,
+        'show_ui'            => true,
+        'show_in_menu'       => true,
+        'query_var'          => true,
+        'rewrite'            => true,
+        'capability_type'    => 'post',
+        'has_archive'        => true,
+        'hierarchical'       => false,
+        'menu_position'      => null,
+        'supports'           => array('title','editor','author','thumbnail','excerpt','comments')
+    ) );
+}
