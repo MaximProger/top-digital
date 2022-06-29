@@ -721,8 +721,8 @@ class Bootstrap_Walker_Comment extends Walker {
 }
 
 // Добавление типа записей "услуги"
-add_action('init', 'service_init');
-function service_init(){
+add_action('init', 'post__types_init');
+function post__types_init(){
     register_post_type('service', array(
         'labels'             => array(
             'name'               => __('Услуги'), // основное название для типа записи
@@ -739,6 +739,7 @@ function service_init(){
             'menu_name'          => __('Услуги'), // название меню
 
         ),
+        'menu_position'       => 4,
         'menu_icon' => 'dashicons-universal-access-alt',
         'public'             => true,
         'publicly_queryable' => true,
@@ -749,7 +750,36 @@ function service_init(){
         'capability_type'    => 'post',
         'has_archive'        => true,
         'hierarchical'       => false,
-        'menu_position'      => null,
         'supports'           => array('title','editor','author','thumbnail','excerpt','comments')
+    ) );
+
+    register_post_type('tarif', array(
+        'labels'             => array(
+            'name'               => __('Тарифы'), // основное название для типа записи
+            'singular_name'      => __('Тариф'), // название для одной записи этого типа
+            'add_new'            => __('Добавить тариф'), // для добавления новой записи
+            'add_new_item'       => __('Добавление тарифа'), // заголовка у вновь создаваемой записи в админ-панели.
+            'edit_item'          => __('Редактирование тарифа'), // для редактирования типа записи
+            'new_item'           => __('Новый тариф'), // текст новой записи
+            'view_item'          => __('Смотреть тариф'), // для просмотра записи этого типа.
+            'search_items'       => __('Искать тариф'), // для поиска по этим типам записи
+            'not_found'          => __('Не найдено'), // если в результате поиска ничего не было найдено
+            'not_found_in_trash' => __('Не найдено в корзине'), // если не было найдено в корзине
+            'parent_item_colon'  => '', // для родителей (у древовидных типов)
+            'menu_name'          => __('Тарифы'), // название меню
+
+        ),
+        'menu_position'       => 5,
+        'menu_icon' => 'dashicons-money-alt',
+        'public'             => true,
+        'publicly_queryable' => true,
+        'show_ui'            => true,
+        'show_in_menu'       => true,
+        'query_var'          => true,
+        'rewrite'            => true,
+        'capability_type'    => 'post',
+        'has_archive'        => true,
+        'hierarchical'       => false,
+        'supports'           => array('title','editor','author','thumbnail','excerpt','comments','custom-fields')
     ) );
 }
