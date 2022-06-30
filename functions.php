@@ -720,9 +720,9 @@ class Bootstrap_Walker_Comment extends Walker {
     }
 }
 
-// Добавление типа записей "услуги"
 add_action('init', 'post__types_init');
 function post__types_init(){
+    // Добавление типа записей "услуги"
     register_post_type('service', array(
         'labels'             => array(
             'name'               => __('Услуги'), // основное название для типа записи
@@ -753,6 +753,7 @@ function post__types_init(){
         'supports'           => array('title','editor','author','thumbnail','excerpt','comments')
     ) );
 
+    // Добавление типа записей "тарифы"
     register_post_type('tarif', array(
         'labels'             => array(
             'name'               => __('Тарифы'), // основное название для типа записи
@@ -771,6 +772,37 @@ function post__types_init(){
         ),
         'menu_position'       => 5,
         'menu_icon' => 'dashicons-money-alt',
+        'public'             => true,
+        'publicly_queryable' => true,
+        'show_ui'            => true,
+        'show_in_menu'       => true,
+        'query_var'          => true,
+        'rewrite'            => true,
+        'capability_type'    => 'post',
+        'has_archive'        => true,
+        'hierarchical'       => false,
+        'supports'           => array('title','editor','author','thumbnail','excerpt','comments','custom-fields')
+    ) );
+
+    // Добавление типа записей "отзывы"
+    register_post_type('reviews', array(
+        'labels'             => array(
+            'name'               => __('Отзывы'), // основное название для типа записи
+            'singular_name'      => __('Отзыв'), // название для одной записи этого типа
+            'add_new'            => __('Добавить отзыв'), // для добавления новой записи
+            'add_new_item'       => __('Добавление отзыва'), // заголовка у вновь создаваемой записи в админ-панели.
+            'edit_item'          => __('Редактирование отзыва'), // для редактирования типа записи
+            'new_item'           => __('Новый отзыв'), // текст новой записи
+            'view_item'          => __('Смотреть отзыв'), // для просмотра записи этого типа.
+            'search_items'       => __('Искать отзыв'), // для поиска по этим типам записи
+            'not_found'          => __('Не найдено'), // если в результате поиска ничего не было найдено
+            'not_found_in_trash' => __('Не найдено в корзине'), // если не было найдено в корзине
+            'parent_item_colon'  => '', // для родителей (у древовидных типов)
+            'menu_name'          => __('Отзывы'), // название меню
+
+        ),
+        'menu_position'       => 6,
+        'menu_icon' => 'dashicons-format-status',
         'public'             => true,
         'publicly_queryable' => true,
         'show_ui'            => true,
