@@ -14,7 +14,8 @@ get_header(); ?>
             <div class="col-lg-8 m-auto text-center col-sm-12 col-md-12">
                 <div class="banner-content content-padding">
                     <h1 class="text-white">Давайте обсудим работу над&nbsp;вашим проектом</h1>
-                    <p>Напишите нам и вам ответит проектный менеджер</p>
+                    <p><? the_content(); ?></p>
+
                 </div>
             </div>
         </div>
@@ -70,11 +71,11 @@ get_header(); ?>
 
             <div class="col-lg-5 pl-4 mt-4 mt-lg-0">
                 <h4>Адрес офиса</h4>
-                <p class="mb-3">г. Москва, ул. 40 лет СССР, строение 3, офис 37</p>
+                <p class="mb-3"><?php the_field('address', 16); ?></p>
                 <h4>Телефон</h4>
-                <p class="mb-3">+7 345 64 79 20</p>
+                <p class="mb-3"><?php the_field('phone', 16); ?></p>
                 <h4>E-Mail</h4>
-                <p class="mb-3">support@email.com</p>
+                <p class="mb-3"><?php the_field('email', 16); ?></p>
             </div>
         </div>
     </div>

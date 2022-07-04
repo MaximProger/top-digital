@@ -815,3 +815,11 @@ function post__types_init(){
         'supports'           => array('title','editor','author','thumbnail','excerpt','comments','custom-fields')
     ) );
 }
+
+// кастомный шорткод
+add_shortcode( 'foobar', 'foobar_shortcode' );
+
+function foobar_shortcode( $atts ){
+    return 'Напишите нам и вам ответит проектный менеджер';
+}
+
