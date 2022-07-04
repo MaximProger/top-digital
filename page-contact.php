@@ -14,7 +14,7 @@ get_header(); ?>
             <div class="col-lg-8 m-auto text-center col-sm-12 col-md-12">
                 <div class="banner-content content-padding">
                     <h1 class="text-white">Давайте обсудим работу над&nbsp;вашим проектом</h1>
-                    <p><? the_content(); ?></p>
+                    <p><?php echo do_shortcode("[foobar]"); ?></p>
 
                 </div>
             </div>
@@ -83,13 +83,11 @@ get_header(); ?>
 <!--  CONTACT END  -->
 
 <!--  Google Map START  -->
-<section id="map" class="section-padding">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 col-sm-6 col-md-3"></div>
-        </div>
-    </div>
+<section class="section-padding">
+    <?php the_content(); ?>
 </section>
 <!--  Google Map END  -->
+
+
 
 <?php get_footer(); ?>
